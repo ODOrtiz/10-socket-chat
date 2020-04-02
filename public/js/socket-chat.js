@@ -19,7 +19,9 @@ var usuario = {
     sala: params.get('sala')
 }
 
+// ===================================================================
 // Funcion para saber si se conectó al socket
+// ===================================================================
 socket.on('connect', function() {
 
     console.log('Conectado al servidor');
@@ -27,37 +29,41 @@ socket.on('connect', function() {
     // Emito que quiero entrar a un chat enviando la informacion del usuario
     socket.emit('entrarChar', usuario, function( resp ) {
 
+        // Ejecuto la funcion para renderizar usuarios
+        renderizarUsuarios(resp);
+
     });
 });
 
+// ===================================================================
 // Funcion para saber si se pierde la coneccion con el servidor
+// ===================================================================
 socket.on('disconnect', function() {
     console.log('Perdimos conexión con el servidor');
 });
 
-
-// Enviar información
-/* socket.emit('crearMensaje', {
-    usuario: 'Fernando',
-    mensaje: 'Hola Mundo'
-}, function(resp) {
-    console.log('respuesta server: ', resp);
-});
- */
-
+// ===================================================================
 // Escuchar información para los usuarios
+// ===================================================================
 socket.on('crearMensaje', function(mensaje) {
 
-    console.log('Servidor:', mensaje);
+    // console.log('Servidor:', mensaje);
+    renderizarMensajes(mensaje, false);
 
 });
 
+// ===================================================================
 // Escuchar cambios cuando un usuario entra y sale del chat
+// ===================================================================
 socket.on('listaPersonas', personas => {
-    console.log("Lista personas: ", personas);
+
+    // Ejecuto la funcion para renderizar usuarios
+    renderizarUsuarios(personas);
 });
 
+// ===================================================================
 // Escucho mensajes privados
+// ===================================================================
 socket.on('mensajePrivado', (mensaje) => {
     console.log('Mensaje privado: ', mensaje);
 })
